@@ -98,7 +98,7 @@ function handleUserGuess(userGaveUp, handlerInput) {
   const requestAttributes = attributesManager.getRequestAttributes();
   const translatedQuestions = requestAttributes.t('QUESTIONS');
 
-
+  // Checking answer and adding the score
   if (answerSlotValid
     && parseInt(intent.slots.Answer.value, 10) === sessionAttributes.correctAnswerIndex) {
     currentScore += 1;
@@ -128,6 +128,8 @@ function handleUserGuess(userGaveUp, handlerInput) {
       .speak(speechOutput)
       .getResponse();
   }
+
+  //Building the next question
   currentQuestionIndex += 1;
   correctAnswerIndex = Math.floor(Math.random() * (ANSWER_COUNT));
   const spokenQuestion = Object.keys(translatedQuestions[gameQuestions[currentQuestionIndex]])[0];
@@ -407,6 +409,10 @@ const AnswerIntent = {
         ErrorHandler(handlerInput);
       }
       
+    }
+    else if (handlerInput.requestEnvelope.request.intent.name === 'DontKnowIntent')
+    {
+         return handleUserGuess(true, handlerInput);
     }
     //return handleUserGuess(true, handlerInput);
     ErrorHandler(handlerInput);
